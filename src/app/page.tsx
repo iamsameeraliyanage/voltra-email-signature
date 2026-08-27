@@ -1,12 +1,14 @@
 "use client";
 
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useMemo, useRef, useState } from "react";
 import { CopyButton } from "@/components/CopyButton";
 import { Field } from "@/components/Field";
 import {
   buildSignatureHtml,
+  COMPANY_ADDRESS,
   DEFAULT_SIGNATURE,
   signatureFileName,
+  WEBSITE,
   type SignatureData,
 } from "@/lib/signature";
 
@@ -15,40 +17,14 @@ const buttonBase =
 const ghostButton = `${buttonBase} border border-line bg-surface text-foreground hover:border-brand hover:text-brand`;
 const solidButton = `${buttonBase} bg-brand text-white hover:brightness-95`;
 
-const subscribeToNothing = () => () => {};
-
 export default function Home() {
-  const [fields, setFields] = useState<SignatureData>(DEFAULT_SIGNATURE);
-  const [logoOverride, setLogoOverride] = useState<string | null>(null);
+  const [data, setData] = useState<SignatureData>(DEFAULT_SIGNATURE);
   const previewRef = useRef<HTMLDivElement>(null);
 
-  // The signature is pasted into mail clients, so the logo needs an absolute
-  // URL. Default it to this app's own copy — whoever hosts the generator also
-  // hosts a usable logo. The origin is only knowable in the browser, hence the
-  // separate server snapshot.
-  const origin = useSyncExternalStore(
-    subscribeToNothing,
-    () => window.location.origin,
-    () => "",
-  );
-  const logoUrl =
-    logoOverride ??
-    (origin ? `${origin}/voltra-logo.png` : DEFAULT_SIGNATURE.logoUrl);
-
-  const data = useMemo<SignatureData>(
-    () => ({ ...fields, logoUrl }),
-    [fields, logoUrl],
-  );
   const html = useMemo(() => buildSignatureHtml(data), [data]);
 
   function update(key: keyof SignatureData) {
-    return (value: string) =>
-      setFields((current) => ({ ...current, [key]: value }));
-  }
-
-  function reset() {
-    setFields(DEFAULT_SIGNATURE);
-    setLogoOverride(null);
+    return (value: string) => setData((current) => ({ ...current, [key]: value }));
   }
 
   async function copyHtml() {
@@ -105,9 +81,7 @@ export default function Home() {
       <main className="grid flex-1 gap-6 p-6 lg:grid-cols-[minmax(320px,380px)_1fr] lg:items-start">
         {/* LEFT — details */}
         <section className="rounded-xl border border-line bg-surface p-5 lg:sticky lg:top-6">
-          <h2 className="font-display text-sm font-semibold">
-            Your details
-          </h2>
+          <h2 className="font-display text-sm font-semibold">Your details</h2>
 
           <div className="mt-4 space-y-4">
             <Field
@@ -123,12 +97,6 @@ export default function Home() {
               placeholder="Technical Engineer"
             />
             <Field
-              label="Company & address"
-              value={data.company}
-              onChange={update("company")}
-              placeholder="Green Energy Solution GmbH, Zikadenweg 7, CH-3006 Bern"
-            />
-            <Field
               label="Phone"
               type="tel"
               value={data.phone}
@@ -142,24 +110,23 @@ export default function Home() {
               onChange={update("email")}
               placeholder="john@voltra.ch"
             />
-            <Field
-              label="Website"
-              value={data.website}
-              onChange={update("website")}
-              placeholder="www.voltra.ch"
-            />
-            <Field
-              label="Logo URL"
-              value={logoUrl}
-              onChange={setLogoOverride}
-              hint="Must be a public absolute URL — mail clients cannot load a local file."
-            />
+          </div>
+
+          <div className="mt-5 rounded-lg border border-line bg-background px-3.5 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+              Same on every signature
+            </p>
+            <p className="mt-1.5 text-xs leading-relaxed text-muted">
+              {COMPANY_ADDRESS}
+              <br />
+              {WEBSITE} · Voltra logo
+            </p>
           </div>
 
           <button
             type="button"
-            onClick={reset}
-            className={`${ghostButton} mt-5 w-full`}
+            onClick={() => setData(DEFAULT_SIGNATURE)}
+            className={`${ghostButton} mt-4 w-full`}
           >
             Reset to example
           </button>
@@ -169,9 +136,7 @@ export default function Home() {
         <div className="flex min-w-0 flex-col gap-6">
           <section className="rounded-xl border border-line bg-surface">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
-              <h2 className="font-display text-sm font-semibold">
-                Preview
-              </h2>
+              <h2 className="font-display text-sm font-semibold">Preview</h2>
               <CopyButton
                 label="Copy signature"
                 onCopy={copySignature}
@@ -179,18 +144,13 @@ export default function Home() {
               />
             </div>
             <div className="overflow-x-auto p-5">
-              <div
-                ref={previewRef}
-                dangerouslySetInnerHTML={{ __html: html }}
-              />
+              <div ref={previewRef} dangerouslySetInnerHTML={{ __html: html }} />
             </div>
           </section>
 
           <section className="flex min-w-0 flex-col rounded-xl border border-line bg-surface">
             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-5 py-3">
-              <h2 className="font-display text-sm font-semibold">
-                HTML
-              </h2>
+              <h2 className="font-display text-sm font-semibold">HTML</h2>
               <div className="flex gap-2">
                 <CopyButton
                   label="Copy HTML"

@@ -18,11 +18,11 @@ npm run build && npm start   # production
 ## How it works
 
 - [src/lib/signature.ts](src/lib/signature.ts) is the whole template and the
-  canonical copy of the original signature design — rendering it with
-  `DEFAULT_SIGNATURE` reproduces that markup byte for byte. Entered details are
-  substituted and HTML-escaped. Optional lines (phone, website, address) drop
-  out of the markup when left blank, and the last remaining line loses its
-  bottom margin so spacing stays correct.
+  canonical copy of the original signature design. Only four details vary per
+  person — name, job title, phone, email — and they are substituted and
+  HTML-escaped. The company address, website, and logo URL are constants at the
+  top of the same file: change them there and every signature follows. A blank
+  phone or email drops its line from the markup entirely.
 - [src/app/page.tsx](src/app/page.tsx) is the editor: form, live preview, code
   panel, and the copy/download actions.
 - **Copy signature** puts the rendered signature on the clipboard as `text/html`,
@@ -32,10 +32,14 @@ npm run build && npm start   # production
 ## The logo
 
 Mail clients cannot load local files, so the signature needs a publicly
-reachable logo URL. The **Logo URL** field defaults to this app's own copy at
-`/voltra-logo.png` on whatever origin you are viewing it from — deploy the app
-and the default is already correct. Override the field to point at a different
-host if you serve the logo elsewhere.
+reachable logo URL. It points at this app's own deployment:
+
+    https://voltra-email-signature.vercel.app/voltra-logo.png
+
+That URL has to keep resolving for as long as the signatures are in use — if the
+deployment ever moves, update `LOGO_URL` in
+[src/lib/signature.ts](src/lib/signature.ts) *and* re-issue the signatures,
+because already-pasted ones embed the old URL.
 
 ## Fonts
 

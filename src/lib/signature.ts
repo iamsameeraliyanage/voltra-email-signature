@@ -1,23 +1,28 @@
+/** The per-person details. Everything else about the signature is fixed. */
 export type SignatureData = {
   fullName: string;
   jobTitle: string;
-  company: string;
   phone: string;
   email: string;
-  website: string;
-  logoUrl: string;
 };
+
+/** Same for every Voltra signature, so not worth putting in the form. */
+export const COMPANY_ADDRESS =
+  "Green Energy Solution GmbH, Zikadenweg 7, CH-3006 Bern";
+export const WEBSITE = "www.voltra.ch";
+
+/**
+ * Absolute by necessity — mail clients cannot resolve a relative path. Points
+ * at this app's own deployment, which also serves the logo.
+ */
+export const LOGO_URL =
+  "https://voltra-email-signature.vercel.app/voltra-logo.png";
 
 export const DEFAULT_SIGNATURE: SignatureData = {
   fullName: "John Doe",
   jobTitle: "Technical Engineer",
-  company: "Green Energy Solution GmbH, Zikadenweg 7, CH-3006 Bern",
   phone: "+41 31 561 92 93",
   email: "john@voltra.ch",
-  website: "www.voltra.ch",
-  // Relative on purpose: it is only the pre-hydration placeholder, replaced by
-  // an absolute origin URL as soon as the browser knows one.
-  logoUrl: "/voltra-logo.png",
 };
 
 const SORA = "'Sora', Arial, Helvetica, sans-serif";
@@ -67,11 +72,10 @@ function textLine({ label, text, href, last }: Line): string {
  * DEFAULT_SIGNATURE reproduces that design exactly.
  */
 export function buildSignatureHtml(data: SignatureData): string {
-  const lines: Line[] = [];
+  // Address first and website last are fixed; phone and email sit between them
+  // and drop out when blank.
+  const lines: Line[] = [{ label: "COMPANY / ADDRESS", text: COMPANY_ADDRESS }];
 
-  if (data.company.trim()) {
-    lines.push({ label: "COMPANY / ADDRESS", text: data.company.trim() });
-  }
   if (data.phone.trim()) {
     lines.push({
       label: "PHONE",
@@ -86,16 +90,12 @@ export function buildSignatureHtml(data: SignatureData): string {
       href: `mailto:${data.email.trim()}`,
     });
   }
-  if (data.website.trim()) {
-    lines.push({
-      label: "WEBSITE",
-      text: data.website.trim(),
-      href: websiteHref(data.website),
-    });
-  }
-  if (lines.length > 0) {
-    lines[lines.length - 1].last = true;
-  }
+  lines.push({
+    label: "WEBSITE",
+    text: WEBSITE,
+    href: websiteHref(WEBSITE),
+    last: true,
+  });
 
   const contactBlock = lines.map(textLine).join("\n\n");
 
@@ -107,7 +107,7 @@ export function buildSignatureHtml(data: SignatureData): string {
     <td valign="middle" style="width:220px; height:195px; background-color:#3B4044; text-align:center; vertical-align:middle; padding:0; margin:0;">
 
       <img
-        src="${escAttr(data.logoUrl.trim())}"
+        src="${escAttr(LOGO_URL)}"
         alt="Voltra"
         width="165"
         style="display:block; width:165px; height:165px; border:0; outline:none; text-decoration:none; margin:0 auto;"
@@ -142,6 +142,10 @@ export function signatureFileName(fullName: string): string {
   const slug = fullName
     .trim()
     .toLowerCase()
+    // Split accents off their base letters and drop them, so "Söderström"
+    // slugs to "soderstrom" rather than "s-derstr-m".
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
