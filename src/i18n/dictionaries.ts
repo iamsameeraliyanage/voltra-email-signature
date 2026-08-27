@@ -24,7 +24,9 @@ export type Dictionary = {
   fixedLogo: string;
   reset: string;
   previewTitle: string;
-  previewNote: string;
+  viewCode: string;
+  closeLabel: string;
+  htmlNote: string;
   fixedNote: string;
   htmlTitle: string;
   copyHtml: string;
@@ -55,7 +57,10 @@ export const DICTIONARIES: Record<Locale, Dictionary> = {
     fixedLogo: "Voltra Logo",
     reset: "Auf Beispiel zurücksetzen",
     previewTitle: "Vorschau",
-    previewNote: "700 × 195 px",
+    viewCode: "HTML anzeigen",
+    closeLabel: "Schliessen",
+    htmlNote:
+      "Für Outlook aufgebaut: Tabellen-Layout, Inline-Styles, absolute Bild-URL.",
     fixedNote: "Nach den Voltra Markenrichtlinien.",
     htmlTitle: "HTML",
     copyHtml: "HTML kopieren",
@@ -84,7 +89,10 @@ export const DICTIONARIES: Record<Locale, Dictionary> = {
     fixedLogo: "Voltra logo",
     reset: "Reset to example",
     previewTitle: "Preview",
-    previewNote: "700 × 195 px",
+    viewCode: "View HTML",
+    closeLabel: "Close",
+    htmlNote:
+      "Built for Outlook: table layout, inline styles, absolute image URL.",
     fixedNote: "Set by the Voltra brand guidelines.",
     htmlTitle: "HTML",
     copyHtml: "Copy HTML",

@@ -23,11 +23,46 @@ npm run build && npm start   # production
   HTML-escaped. The company address, website, and logo URL are constants at the
   top of the same file: change them there and every signature follows. A blank
   phone or email drops its line from the markup entirely.
-- [src/app/page.tsx](src/app/page.tsx) is the editor: form, live preview, code
-  panel, and the copy/download actions.
-- **Copy signature** puts the rendered signature on the clipboard as `text/html`,
-  so it pastes styled straight into Gmail or Outlook. **Copy HTML** / **Download
-  HTML** give you the raw markup instead.
+- [src/app/page.tsx](src/app/page.tsx) is the editor: form on the left, live
+  preview on the right, and the actions on the preview header. The `<>` button
+  opens a right drawer ([CodeDrawer.tsx](src/components/CodeDrawer.tsx)) with the
+  generated markup.
+- `buildSignatureTable` renders the table on its own — that is what the preview
+  shows. `buildSignatureDocument` wraps it in a complete HTML document, and that
+  is what **Copy HTML** and **Download HTML** hand over.
+
+## Built for Outlook
+
+Outlook on Windows renders mail through Word, which is the constraint the markup
+is written against:
+
+- **Rows, not divs.** Word applies its own paragraph spacing to block elements
+  and honours `margin` inconsistently. Every line of the signature is a table
+  row spaced with cell padding, the one mechanism it gets right.
+- **Attributes beside the CSS.** `width`, `height`, `align`, `valign` and
+  `bgcolor` are set as HTML attributes as well as inline styles, because Word
+  trusts the attributes when it ignores the CSS.
+- **`mso-line-height-rule:exactly`** precedes every `line-height`, or Word adds
+  its own leading.
+- **Unquoted font names.** Word can discard a font stack it fails to parse and
+  fall back to Times New Roman. `Sora, Arial, …` sidesteps that. Outlook cannot
+  load webfonts at all, so it lands on Arial — the intended fallback.
+- **A fixed 410px inner table**, so a long name or job title wraps inside the
+  cell rather than widening the whole signature past 700px.
+- **`<span>` inside every link**, which stops iOS and Outlook.com recolouring and
+  underlining detected phone numbers and addresses.
+- **`-ms-interpolation-mode:bicubic`** on the logo so Windows scales it cleanly,
+  and `mso-table-lspace/rspace:0pt` so Word adds no gutter around the tables.
+
+The download is a complete document rather than a fragment, for two reasons:
+Outlook keeps signatures as standalone `.htm` files in
+`%APPDATA%\Microsoft\Signatures`, and the `<meta charset="utf-8">` is what
+stops a name like "Söderström" arriving as mojibake. The `<!--[if mso]>` block
+pins Outlook to 96 DPI so the fixed pixel sizes are not scaled up on high-DPI
+Windows displays.
+
+Two ways to install it: paste the copied HTML into Outlook's signature editor,
+or drop the downloaded `.htm` into the Signatures folder.
 
 ## The logo
 
