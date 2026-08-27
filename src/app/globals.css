@@ -1,29 +1,58 @@
 @import "tailwindcss";
 
+/*
+  Every value below comes from voltra Brand Guidelines V2:
+  - Apple Green #56BB09, Charcoal Heather #3A4044, White  (Colors → Color Palette)
+  - #EEF8E6 is the light tint the deck itself uses as the backdrop when it
+    presents the email signature (Brand In Use), which is what this app makes.
+  - #244F04 is the deck's section-heading green; #193504 its deep surface.
+  - #2C2B2B is the button label colour on Apple Green (Typography → Type Hierarchy).
+*/
 :root {
-  --background: #f4f5f6;
+  --volt: #56bb09;
+  --charcoal: #3a4044;
+  --forest: #193504;
+  --heading: #244f04;
+  --tint: #eef8e6;
   --surface: #ffffff;
-  --foreground: #1b1f22;
-  --muted: #6b7278;
-  --border: #e2e5e8;
-  --brand: #4dbd00;
-  --panel: #3b4044;
+  --ink: #2c2b2b;
+  --muted: #6e7671;
+  --rule: #d9e5cf;
+  --rule-dark: #4c5257;
 }
 
 @theme inline {
-  --color-background: var(--background);
+  --color-volt: var(--volt);
+  --color-charcoal: var(--charcoal);
+  --color-forest: var(--forest);
+  --color-heading: var(--heading);
+  --color-tint: var(--tint);
   --color-surface: var(--surface);
-  --color-foreground: var(--foreground);
+  --color-ink: var(--ink);
   --color-muted: var(--muted);
-  --color-line: var(--border);
-  --color-brand: var(--brand);
-  --color-panel: var(--panel);
+  --color-rule: var(--rule);
+  --color-rule-dark: var(--rule-dark);
   --font-sans: "Manrope", Arial, Helvetica, sans-serif;
   --font-display: "Sora", Arial, Helvetica, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--tint);
+  color: var(--ink);
   font-family: var(--font-sans);
+}
+
+/* Keyboard users get a visible target on every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--volt);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -25,6 +25,10 @@ export const DEFAULT_SIGNATURE: SignatureData = {
   email: "john@voltra.ch",
 };
 
+// Brand colours, from voltra Brand Guidelines V2 (Colors → Color Palette).
+export const APPLE_GREEN = "#56BB09";
+export const CHARCOAL_HEATHER = "#3A4044";
+
 const SORA = "'Sora', Arial, Helvetica, sans-serif";
 const MANROPE = "'Manrope', Arial, Helvetica, sans-serif";
 
@@ -104,7 +108,7 @@ export function buildSignatureHtml(data: SignatureData): string {
   <tr>
 
     <!-- LOGO -->
-    <td valign="middle" style="width:220px; height:195px; background-color:#3B4044; text-align:center; vertical-align:middle; padding:0; margin:0;">
+    <td valign="middle" style="width:220px; height:195px; background-color:#3A4044; text-align:center; vertical-align:middle; padding:0; margin:0;">
 
       <img
         src="${escAttr(LOGO_URL)}"
@@ -124,7 +128,7 @@ export function buildSignatureHtml(data: SignatureData): string {
       </div>
 
       <!-- JOB TITLE -->
-      <div style="font-family:${SORA}; font-size:16px; line-height:20px; font-weight:400; color:#4DBD00; margin:0 0 25px 0; padding:0;">
+      <div style="font-family:${SORA}; font-size:16px; line-height:20px; font-weight:500; color:#56BB09; margin:0 0 25px 0; padding:0;">
         ${esc(data.jobTitle.trim())}
       </div>
 

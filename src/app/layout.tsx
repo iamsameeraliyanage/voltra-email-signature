@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Voltra Email Signature Generator",
+  title: "Voltra E-Mail-Signatur",
   description:
-    "Fill in your details and download a ready-to-paste Voltra email signature.",
+    "Angaben eingeben und eine fertige Voltra E-Mail-Signatur herunterladen.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  // German is the default language; the switcher marks its choice further down
+  // the tree, since the locale is chosen in the browser.
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="de" className="h-full antialiased">
       <head>
         {/*
           Loaded by their real family names rather than via next/font, because
@@ -18,14 +20,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           client would.
         */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {/* eslint-disable-next-line @next/next/no-page-custom-font -- this is the App Router root layout, so the stylesheet applies to every page */}
         <link
-          href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700&display=swap"
           rel="stylesheet"
         />
       </head>

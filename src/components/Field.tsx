@@ -4,7 +4,6 @@ type FieldProps = {
   onChange: (value: string) => void;
   type?: string;
   placeholder?: string;
-  hint?: string;
 };
 
 export function Field({
@@ -13,11 +12,11 @@ export function Field({
   onChange,
   type = "text",
   placeholder,
-  hint,
 }: FieldProps) {
   return (
     <label className="block">
-      <span className="block text-xs font-semibold uppercase tracking-wide text-muted">
+      {/* Overlines are Regular and understated, per the brand type hierarchy. */}
+      <span className="block text-[11px] font-normal uppercase tracking-[0.12em] text-muted">
         {label}
       </span>
       <input
@@ -25,9 +24,8 @@ export function Field({
         value={value}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
-        className="mt-1.5 w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-foreground outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/25"
+        className="mt-2 w-full rounded-lg border border-rule bg-surface px-3.5 py-2.5 text-sm font-medium text-ink transition-colors placeholder:font-normal placeholder:text-muted/60 hover:border-volt/50 focus:border-volt focus:outline-none focus:ring-2 focus:ring-volt/25"
       />
-      {hint ? <span className="mt-1.5 block text-xs text-muted">{hint}</span> : null}
     </label>
   );
 }

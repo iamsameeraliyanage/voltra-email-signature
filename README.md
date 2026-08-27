@@ -41,6 +41,44 @@ deployment ever moves, update `LOGO_URL` in
 [src/lib/signature.ts](src/lib/signature.ts) *and* re-issue the signatures,
 because already-pasted ones embed the old URL.
 
+## Language
+
+The UI ships in German (default) and English. The strings live in
+[src/i18n/dictionaries.ts](src/i18n/dictionaries.ts); the chosen locale is kept
+in `localStorage` and read through `useSyncExternalStore`
+([src/i18n/useLocale.ts](src/i18n/useLocale.ts)) so the server can prerender
+German and the browser can swap in a stored choice during hydration without a
+cascading render. There is no locale routing — two languages on one static page
+do not need it. The signature's own content is never translated.
+
+To add a language: add the code to `LOCALES`, add its `Dictionary` entry, and
+the header toggle picks it up. `Dictionary` is a closed type, so a missing
+string is a build error.
+
+## Brand
+
+Colours, type, and layout follow **voltra Brand Guidelines V2** (kept at the
+repo root):
+
+| Token | Value | Source in the guidelines |
+| --- | --- | --- |
+| Apple Green | `#56BB09` | Colors → Color Palette |
+| Charcoal Heather | `#3A4044` | Colors → Color Palette |
+| Light tint | `#EEF8E6` | Brand In Use — the backdrop the deck itself uses to present the email signature |
+| Heading green | `#244F04` | section headings throughout the deck |
+| Button label | `#2C2B2B` | Typography → Type Hierarchy |
+
+Type follows the same section: Sora for headings (SemiBold) and subheadings
+(Medium), Manrope for body (Regular, Medium to emphasise), overlines in Regular,
+button labels in SemiBold. Buttons are Apple Green with the dark label colour —
+white text on Apple Green would fail contrast and is not what the guidelines
+show.
+
+The header crops the supplied logo rather than redrawing it: the asset is a
+256px Charcoal Heather square whose wordmark occupies only its middle third, so
+it is scaled proportionally and the surrounding field — the same colour as the
+header — is masked. Nothing is stretched or recoloured.
+
 ## Fonts
 
 The signature asks for `Sora` and `Manrope` with an Arial/Helvetica fallback.
