@@ -78,8 +78,8 @@ type Line = { label: string; text: string; href?: string; last?: boolean };
  * inconsistently — cell padding is the one spacing mechanism it gets right.
  */
 function textLine({ label, text, href, last }: Line): string {
-  const spacing = last ? "0" : "0 0 7px 0";
-  const type = `font-family:${MANROPE}; font-size:14px; ${EXACT_LINE_HEIGHT} line-height:20px; font-weight:500; color:#000000;`;
+  const spacing = last ? "0" : "0 0 3px 0";
+  const type = `font-family:${MANROPE}; font-size:11px; ${EXACT_LINE_HEIGHT} line-height:15px; font-weight:500; color:#000000;`;
 
   // The inner span keeps iOS and Outlook.com from recolouring and underlining
   // detected phone numbers and addresses despite the anchor's own styles.
@@ -127,29 +127,29 @@ export function buildSignatureTable(data: SignatureData): string {
 
   const contactRows = lines.map(textLine).join("\n");
 
-  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="700" style="width:700px; ${TABLE_RESET} margin:0; padding:0; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="474" style="width:474px; ${TABLE_RESET} margin:0; padding:0; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
   <tr>
 
     <!-- LOGO -->
-    <td width="220" height="195" align="center" valign="middle" bgcolor="${CHARCOAL_HEATHER}" style="width:220px; height:195px; background-color:${CHARCOAL_HEATHER}; text-align:center; vertical-align:middle; padding:0;">
-      <img src="${escAttr(LOGO_URL)}" alt="Voltra" width="165" height="165" border="0" style="display:block; width:165px; height:165px; border:0; outline:none; text-decoration:none; margin:0 auto; -ms-interpolation-mode:bicubic;">
+    <td width="124" height="116" align="center" valign="middle" bgcolor="${CHARCOAL_HEATHER}" style="width:124px; height:116px; background-color:${CHARCOAL_HEATHER}; text-align:center; vertical-align:middle; padding:0;">
+      <img src="${escAttr(LOGO_URL)}" alt="Voltra" width="82" height="82" border="0" style="display:block; width:82px; height:82px; border:0; outline:none; text-decoration:none; margin:0 auto; -ms-interpolation-mode:bicubic;">
     </td>
 
     <!-- CONTENT -->
-    <td width="480" height="195" valign="middle" bgcolor="#FFFFFF" style="width:480px; height:195px; background-color:#FFFFFF; vertical-align:middle; padding:28px 35px;">
+    <td width="350" height="116" valign="middle" bgcolor="#FFFFFF" style="width:350px; height:116px; background-color:#FFFFFF; vertical-align:middle; padding:6px 16px;">
 
-      <!-- 480px cell less its 35px side padding. Fixed so long text wraps
+      <!-- 350px cell less its 16px side padding. Fixed so long text wraps
            inside the cell instead of widening the whole signature. -->
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="410" style="width:410px; ${TABLE_RESET}">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="318" style="width:318px; ${TABLE_RESET}">
 
           <!-- NAME -->
           <tr>
-            <td style="padding:0 0 7px 0; font-family:${SORA}; font-size:20px; ${EXACT_LINE_HEIGHT} line-height:24px; font-weight:600; color:#000000;">${esc(data.fullName.trim())}</td>
+            <td style="padding:0 0 3px 0; font-family:${SORA}; font-size:14px; ${EXACT_LINE_HEIGHT} line-height:18px; font-weight:600; color:#000000;">${esc(data.fullName.trim())}</td>
           </tr>
 
           <!-- JOB TITLE -->
           <tr>
-            <td style="padding:0 0 25px 0; font-family:${SORA}; font-size:16px; ${EXACT_LINE_HEIGHT} line-height:20px; font-weight:500; color:${APPLE_GREEN};">${esc(data.jobTitle.trim())}</td>
+            <td style="padding:0 0 10px 0; font-family:${SORA}; font-size:12px; ${EXACT_LINE_HEIGHT} line-height:16px; font-weight:500; color:${APPLE_GREEN};">${esc(data.jobTitle.trim())}</td>
           </tr>
 
 ${contactRows}
